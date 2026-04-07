@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Copy, Check } from 'lucide-react';
+import { Search } from 'lucide-react';
 
 const emojiData = [
   { emoji: "💯", name: "100", keywords: "hundred, points, symbol, wow, win, perfect, parties" },
@@ -26,7 +26,6 @@ const emojiData = [
 
 export default function App() {
   const [search, setSearch] = useState("");
-  const [copied, setCopied] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
     if (!search) return emojiData;
@@ -37,12 +36,6 @@ export default function App() {
       e.keywords.toLowerCase().includes(q)
     );
   }, [search]);
-
-  const copy = (emoji: string) => {
-    navigator.clipboard.writeText(emoji);
-    setCopied(emoji);
-    setTimeout(() => setCopied(null), 1500);
-  };
 
   return (
     <div className="min-h-screen bg-slate-100">
@@ -74,10 +67,8 @@ export default function App() {
       <main className="mx-auto max-w-6xl px-4 py-12">
         <div className="grid gap-6 md:grid-cols-2">
           {filtered.map((item) => (
-            <button
+            <div
               key={item.emoji}
-              type="button"
-              onClick={() => copy(item.emoji)}
               className="group overflow-hidden rounded-[28px] bg-white p-8 text-left shadow-xl shadow-slate-900/5 transition-transform duration-200 hover:-translate-y-1 hover:shadow-2xl"
             >
               <div className="flex h-24 w-24 items-center justify-center rounded-[24px] bg-slate-50 text-5xl shadow-sm shadow-slate-900/5">
@@ -87,20 +78,7 @@ export default function App() {
                 <h3 className="text-2xl font-semibold text-slate-900">{item.name}</h3>
                 <p className="mt-3 text-sm leading-6 text-slate-500">{item.keywords}</p>
               </div>
-              <div className="mt-6 inline-flex items-center gap-2 rounded-full bg-sky-50 px-4 py-2 text-sm font-medium text-sky-700 transition group-hover:bg-sky-100">
-                {copied === item.emoji ? (
-                  <>
-                    <Check size={16} />
-                    Скопировано!
-                  </>
-                ) : (
-                  <>
-                    <Copy size={16} />
-                    Копировать
-                  </>
-                )}
-              </div>
-            </button>
+            </div>
           ))}
         </div>
 
